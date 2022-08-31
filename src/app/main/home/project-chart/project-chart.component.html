@@ -1,0 +1,27 @@
+<div class="card">
+    <div class="card-header fontweight-bold">Dự án tháng này</div>
+    <div class="card-body mt-3">
+        <div *ngIf="loading" class="mini-loading-spinner d-flex justify-content-center my-auto">
+            <div class="spinner-border my-auto text-primary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+
+        <div *ngIf="!loading" class="content">
+            <div *ngIf="chartData.series.length > 0">
+                <div id="chart" class="text-center">
+                    <apx-chart [series]="chartData.series" [chart]="chartOptions.chart" [labels]="chartData.labels"
+                        [responsive]="chartOptions.responsive" [grid]="chartOptions.grid"
+                        [plotOptions]="chartOptions.plotOptions">
+                    </apx-chart>
+                </div>
+            </div>
+            <div *ngIf="chartData.series.length == 0" class="text-center">
+                <div class="alert alert-primary" role="alert">
+                    Bạn chưa có dự án nào trong tháng này
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

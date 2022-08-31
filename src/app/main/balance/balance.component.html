@@ -1,0 +1,70 @@
+<main id="main" class="main">
+    <div *ngIf="!loading" class="loading-spinner d-flex justify-content-center my-auto">
+        <div class="spinner-border my-auto text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+    <div *ngIf="loading" class="content">
+
+        <div class="pagetitle">
+            <h1 class="fontweight-bold">Quản Lý Doanh Thu</h1>
+            <nav>
+                <ol class="breadcrumb fontweight-italic">
+                    <li class="breadcrumb-item">Trang Chính</li>
+                    <li class="breadcrumb-item active">Quản Lý Doanh Thu</li>
+                </ol>
+            </nav>
+        </div>
+
+        <section class="profile">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 mx-auto">
+                    <div class="card h-100">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                            <img src="{{ artist.avatar }}" alt="Profile" class="center-cropped rounded-circle">
+                            <h2 class="fontweight-bold">{{ artist.firstName }} {{ artist.lastName }}</h2>
+                            <h1 class="text-primary fontweight-bold mt-2">{{ balance | currency: "VND" }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-8 col-md-8 col-sm-6 mx-auto">
+
+                    <div class="card h-100">
+                        <div class="card-header fontweight-bold">Doanh thu</div>
+                        <div class="card-body">
+                            <div id="chart">
+                                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                    [xaxis]="chartOptions.xaxis" [stroke]="chartOptions.stroke"
+                                    [tooltip]="chartOptions.tooltip" [dataLabels]="chartOptions.dataLabels"></apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-3">
+                <div class="card">
+                    <div class="card-header fontweight-bold">Doanh thu chi tiết theo tháng</div>
+                    <div class="card-boby">
+                        <div class="accordion" id="accordionExample">
+                            <div *ngFor="let revenues of salary.monthlyRevenues" class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <a class="accordion-button">{{ revenues.date | date:'shortDate'}} </a>
+                                </h2>
+                                <div class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                                    <div class="accordion-body">
+                                        <p *ngFor="let detail of revenues.detailRevenues">{{ detail.description }} -
+                                            <span class="fontweight-bold text-primary">
+                                                {{ detail.amount | currency: 'VND'}}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+</main>

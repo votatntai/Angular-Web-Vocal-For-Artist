@@ -1,0 +1,359 @@
+<main id="main" class="main">
+
+    <div *ngIf="!loading" class="loading-spinner d-flex justify-content-center my-auto">
+        <div class="spinner-border my-auto text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="content">
+
+        <div class="pagetitle">
+            <h1 class="fontweight-bold">Thông Tin Cá Nhân</h1>
+            <nav>
+                <ol class="breadcrumb fontweight-italic">
+                    <li class="breadcrumb-item">Trang Chính</li>
+                    <li class="breadcrumb-item active">Thông Tin Cá Nhân</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section profile">
+            <div class="row">
+                <div class="col-xl-4">
+
+                    <div class="card">
+                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                            <img src="{{ artist.avatar || defaultAvatar }}" alt="Profile"
+                                class="center-cropped rounded-circle">
+                            <h2>{{ artist.firstName }} {{ artist.lastName }} </h2>
+                            <h3>{{ artist.email }}</h3>
+                            <h2 class="text-primary">{{ artist.price | currency: 'VND' }}</h2>
+                        </div>
+                        <div *ngIf="artist.rate" class="card-footer d-flex flex-column align-items-center">
+                            <div class="text-center">
+                                <bar-rating id="content-rate" [rate]="rate" [max]="5" [readOnly]="true">
+                                    <ng-template ratingActive>
+                                        <i class="bi bi-star-fill" style="margin: 2px; color: #edb867"></i>
+                                    </ng-template>
+                                    <ng-template ratingInactive>
+                                        <i class="bi bi-star-fill" style="margin: 2px; color: #d2d2d2"></i>
+                                    </ng-template>
+                                    <ng-template ratingFraction>
+                                        <i class="bi bi-star-half" style="margin: 2px; color: #edb867"></i>
+                                    </ng-template>
+                                </bar-rating>
+                                <p>{{ rate.toFixed(1) }}</p>
+                            </div>
+                        </div>
+                        <div *ngIf="!artist.rate" class="card-footer">
+                            <div class="text-center">
+                                Chưa có đánh giá
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xl-8">
+
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs d-flex">
+
+                                <li class="nav-item flex-fill">
+                                    <button class="nav-link fontweight-bold text-muted active" data-bs-toggle="tab"
+                                        data-bs-target="#profile-overview">Tổng quan</button>
+                                </li>
+
+                                <li class="nav-item flex-fill">
+                                    <button class="nav-link fontweight-bold text-muted " data-bs-toggle="tab"
+                                        data-bs-target="#profile-edit">Cập nhật</button>
+                                </li>
+
+                                <li class="nav-item flex-fill">
+                                    <button class="nav-link fontweight-bold text-muted " data-bs-toggle="tab"
+                                        data-bs-target="#avatar-update">Avatar</button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link fontweight-bold text-muted " data-bs-toggle="tab"
+                                        data-bs-target="#profile-change-password">Mật khẩu</button>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content pt-2">
+
+                                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                    <h5 class="card-title">Mô tả bản thân</h5>
+                                    <p class="small fst-italic">{{ artist.bio || "Chưa có lời giới thiệu" }}</p>
+
+                                    <h5 class="card-title">Thông tin chi tiết</h5>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Họ</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.firstName }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Tên</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.lastName }}</div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.email }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Giới tính</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.gender }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Trạng thái</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.status }}</div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 label">Số điện thoại</div>
+                                        <div class="col-lg-9 col-md-8">{{ artist.phone }}</div>
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+                                    <!-- Profile Edit Form -->
+                                    <form [formGroup]="updateProfileForm" (ngSubmit)="updateProfile()">
+
+                                        <div class="row mb-3">
+                                            <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="email" type="email" class="form-control" id="email"
+                                                    value="{{ artist.email }}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="price" class="col-md-4 col-lg-3 col-form-label">Giá theo
+                                                phút</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="number" step="10000" class="form-control" id="price"
+                                                    [ngClass]="(updateProfileForm.get('price')!.touched || updateProfileForm.get('price')!.dirty)
+                                                && updateProfileForm.get('price')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('price')!.touched || updateProfileForm.get('price')!.dirty) &&
+                                                !updateProfileForm.get('price')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="price">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="firstName" class="col-md-4 col-lg-3 col-form-label">Họ</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="firstName" [ngClass]="(updateProfileForm.get('firstName')!.touched || updateProfileForm.get('firstName')!.dirty)
+                                                && updateProfileForm.get('firstName')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('firstName')!.touched || updateProfileForm.get('firstName')!.dirty) &&
+                                                !updateProfileForm.get('firstName')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="firstName">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Tên</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="lastName" [ngClass]="(updateProfileForm.get('lastName')!.touched || updateProfileForm.get('lastName')!.dirty)
+                                                && updateProfileForm.get('lastName')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('lastName')!.touched || updateProfileForm.get('lastName')!.dirty) &&
+                                                !updateProfileForm.get('lastName')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="lastName">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="bio" class="col-md-4 col-lg-3 col-form-label">Mô tả</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <textarea name="bio" class="form-control" rows="4" formControlName="bio"
+                                                    [ngClass]="(updateProfileForm.get('bio')!.touched || updateProfileForm.get('bio')!.dirty)
+                                                && updateProfileForm.get('bio')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('bio')!.touched || updateProfileForm.get('bio')!.dirty) &&
+                                                !updateProfileForm.get('bio')!.invalid ? 'is-valid' : ''"
+                                                    id="bio"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label class="col-md-4 col-lg-3 col-form-label">Studio</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" [value]="true" type="radio"
+                                                        id="true" formControlName="studio" />
+                                                    <label class="form-check-label" for="true">Có</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" [value]="false" type="radio"
+                                                        id="false" formControlName="studio" />
+                                                    <label class="form-check-label" for="false">Không</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="gender" class="col-md-4 col-lg-3 col-form-label">Giới
+                                                tính</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <select class="form-select" formControlName="gender">
+                                                    <option value="Nam">Nam</option>
+                                                    <option value="Nữ">Nữ</option>
+                                                    <option value="Khác">Khác</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="bankName" class="col-md-4 col-lg-3 col-form-label">Tên ngân
+                                                hàng</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="bankName" [ngClass]="(updateProfileForm.get('bankName')!.touched || updateProfileForm.get('bankName')!.dirty)
+                                                && updateProfileForm.get('bankName')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('bankName')!.touched || updateProfileForm.get('bankName')!.dirty) &&
+                                                !updateProfileForm.get('bankName')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="bankName">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="bankAccountNumber" class="col-md-4 col-lg-3 col-form-label">Số
+                                                tài khoản</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="bankAccountNumber"
+                                                    [ngClass]="(updateProfileForm.get('bankAccountNumber')!.touched || updateProfileForm.get('bankAccountNumber')!.dirty)
+                                                && updateProfileForm.get('bankAccountNumber')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('bankAccountNumber')!.touched || updateProfileForm.get('bankAccountNumber')!.dirty) &&
+                                                !updateProfileForm.get('bankAccountNumber')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="bankAccountNumber">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="bankAccountOwner" class="col-md-4 col-lg-3 col-form-label">Chủ
+                                                tài khoản</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="bankAccountOwner" [ngClass]="(updateProfileForm.get('bankAccountOwner')!.touched || updateProfileForm.get('bankAccountOwner')!.dirty)
+                                                && updateProfileForm.get('bankAccountOwner')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('bankAccountOwner')!.touched || updateProfileForm.get('bankAccountOwner')!.dirty) &&
+                                                !updateProfileForm.get('bankAccountOwner')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="bankAccountOwner">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="bankBranch" class="col-md-4 col-lg-3 col-form-label">Chi
+                                                nhánh</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="text" class="form-control" id="bankBranch" [ngClass]="(updateProfileForm.get('bankBranch')!.touched || updateProfileForm.get('bankBranch')!.dirty)
+                                                && updateProfileForm.get('bankBranch')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('bankBranch')!.touched || updateProfileForm.get('bankBranch')!.dirty) &&
+                                                !updateProfileForm.get('bankBranch')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="bankBranch">
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="row mb-3">
+                                            <label for="Phone" class="col-md-4 col-lg-3 col-form-label">Phone</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="phone" type="text" class="form-control" id="Phone"
+                                                    [ngClass]="(updateProfileForm.get('phone')!.touched || updateProfileForm.get('phone')!.dirty)
+                                                && updateProfileForm.get('phone')!.errors ? 'is-invalid' : '' || 
+                                                (updateProfileForm.get('phone')!.touched || updateProfileForm.get('phone')!.dirty) &&
+                                                !updateProfileForm.get('phone')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="phone">
+                                            </div>
+                                        </div> -->
+
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-outline-primary"
+                                                [ngClass]="!updateProfileForm.valid ? 'disabled' : ''">Save
+                                                Changes</button>
+                                        </div>
+                                    </form><!-- End Profile Edit Form -->
+
+                                </div>
+
+                                <div class="tab-pane profile-edit fade pt-3" id="profile-change-password">
+                                    <!-- Change Password Form -->
+                                    <form [formGroup]="updatePasswordForm" (ngSubmit)="updatePassword()">
+
+                                        <div class="row mb-3">
+                                            <label for="change-password-email"
+                                                class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="email" class="form-control" id="change-password-email"
+                                                    value="{{ artist.email }}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Mật
+                                                khẩu hiện tại</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="password" class="form-control" id="currentPassword"
+                                                    [ngClass]="(updatePasswordForm.get('currentPassword')!.touched || updatePasswordForm.get('currentPassword')!.dirty)
+                                                 && updatePasswordForm.get('currentPassword')!.errors ? 'is-invalid' : '' || 
+                                                 (updatePasswordForm.get('currentPassword')!.touched || updatePasswordForm.get('currentPassword')!.dirty) &&
+                                                 !updatePasswordForm.get('currentPassword')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="currentPassword">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">Mật khẩu
+                                                mới</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="password" class="form-control" id="newPassword" [ngClass]="(updatePasswordForm.get('newPassword')!.touched || updatePasswordForm.get('newPassword')!.dirty)
+                                            && updatePasswordForm.get('newPassword')!.errors ? 'is-invalid' : '' || 
+                                            (updatePasswordForm.get('newPassword')!.touched || updatePasswordForm.get('newPassword')!.dirty) &&
+                                            !updatePasswordForm.get('newPassword')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="newPassword">
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="rePassword" class="col-md-4 col-lg-3 col-form-label">Xác nhận
+                                                mật khẩu mới</label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input type="password" class="form-control" id="rePassword" [ngClass]="(updatePasswordForm.get('rePassword')!.touched || updatePasswordForm.get('rePassword')!.dirty)
+                                            && updatePasswordForm.get('rePassword')!.errors || updatePasswordForm.get('rePassword')!.hasError('notSame') ? 'is-invalid' : '' || 
+                                            (updatePasswordForm.get('rePassword')!.touched || updatePasswordForm.get('rePassword')!.dirty) &&
+                                            !updatePasswordForm.get('rePassword')!.invalid ? 'is-valid' : ''"
+                                                    formControlName="rePassword">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-outline-primary"
+                                                [ngClass]="!updatePasswordForm.valid ? 'disabled':''">Change
+                                                Password</button>
+                                        </div>
+                                    </form><!-- End Change Password Form -->
+
+                                </div>
+
+                                <div class="tab-pane fade pt-3" id="avatar-update">
+                                    <app-avatar></app-avatar>
+                                </div>
+
+
+                            </div><!-- End Bordered Tabs -->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+</main><!-- End #main -->
